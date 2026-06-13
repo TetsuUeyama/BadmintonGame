@@ -37,49 +37,57 @@ turbopack では `next.config.ts` の webpack 設定が無視されるため、
 
 | パス | 内容 |
 |------|------|
-| `/` | **リアクションステップ・ノック**（2D Canvas のメインゲーム） |
-| `/babylon` | Babylon.js 3D デモ（将来の 3D 化に向けた土台） |
+| `/` | **リアクションステップ・ノック 3D**（Babylon.js のメインゲーム） |
+| `/classic` | 移植元の 2D Canvas 版（設計の参考用） |
 
 ## ディレクトリ構成
 
 ```
 src/
   app/
-    layout.tsx              ルートレイアウト
-    page.tsx                トップ（リアクションステップ・ノック）
-    globals.css             最小限のリセット
-    babylon/
-      page.tsx              Babylon デモ（/babylon）
-      babylon.css           全画面キャンバス用スタイル
+    layout.tsx                  ルートレイアウト
+    page.tsx                    トップ（3D 版）
+    globals.css                 最小限のリセット
+    classic/page.tsx            2D 版（/classic・参考）
   components/
-    ReactionKnockGame.tsx   ゲーム本体の DOM + エンジン起動（client）
-    reaction-knock.css      ゲーム専用スタイル
-    GameCanvas.tsx          Babylon キャンバス + ライフサイクル管理（client）
+    ReactionKnock3D.tsx         3D 版の React UI（menu/HUD/result）+ エンジン起動
+    reaction-knock-3d.css       3D 版 UI スタイル
+    ReactionKnockGame.tsx       2D 版（参考）
+    reaction-knock.css          2D 版スタイル
   game/
+    reaction-knock-3d/
+      engine.ts                 Babylon シーン + ゲームロジック（3D）
     reaction-knock/
-      engine.ts             ゲームロジック（2D Canvas・型付き移植）
-    createScene.ts          Babylon Engine/Scene 構築（コート/ネット/シャトル/Havok）
+      engine.ts                 2D Canvas ロジック（参考）
 scripts/
-  copy-havok-wasm.mjs       Havok wasm を public/ にコピー
+  copy-havok-wasm.mjs           Havok wasm を public/ にコピー
 ```
 
 ## リアクションステップ・ノックとは
 
-ノッカーが打つ瞬間に「ステップ！」を押し（リアクションステップ）、球の落下点を
+ノッカーが打つ瞬間に「ステップ！」を押し（リアクションステップ）、シャトルの落下点を
 タップして移動 → 届けば自動リターン、という反応速度トレーニング系ミニゲーム。
 ステップ精度が初動速度と体勢の安定（＝リターンの質）に影響する。20 球でスコアとランク判定。
 
 - メニュー: オールショート / オールロング / フリー
 - ノッカー Lv: 1（正直）/ 2（タメあり）/ 3（フェイント）
-- 自己ベストは `localStorage` に保存（元 HTML の `window.storage` から置換）
+- 自己ベストは `localStorage` に保存
 
-## 移植元
+## 3D 版の設計
 
-`reaction-knock.html`（単体 HTML）を TypeScript + React に移植したもの。
-ゲームロジックは挙動を変えずに `src/game/reaction-knock/engine.ts` へ集約。
+`reaction-knock.html`（2D Canvas）の**ゲーム設計を参考**に Babylon.js で作り替えたもの。
+タイミング判定・採点・レベル・フェイントのロジックは 2D 版を踏襲し、描画と座標のみ 3D 化。
+
+- 座標系: 右手系 / **forward = +Z**（プレイヤーはネット方向 +Z を向く）
+- 配置: ネット = `Z:0` / プレイヤー半面 = `-Z` / ノッカー = `+Z`
+- シャトルは物理エンジンではなく**スクリプト軌道（放物線）**。反応ゲームとして着地点・
+  着地時刻を確定させる方が設計に合うため（Havok は依存に残すが本ゲームでは未使用）。
+- タイミングリング・スコアポップアップは `@babylonjs/gui`。
 
 ## 現状 / 未検証
 
-- `npm run build` / `tsc --noEmit` の成功は確認済み。
-- ブラウザでの実プレイ（描画・入力判定・音）は未検証。`npm run dev` で要確認。
-- Babylon デモ（`/babylon`）はコート/ネット/シャトル（仮）の土台シーンまで。
+- ✅ `tsc --noEmit` / `npm run lint` / `npm run build` の成功は確認済み。
+- ⚠️ **ブラウザでの実プレイは未検証**（描画・カメラ・タイミング体感・当たり判定の距離調整・
+  音）。`npm run dev` で要確認。特に `STRETCH`（返球が届く距離）やプレイヤー速度などの
+  数値はプレイして調整が必要。
+- シャトルの空力姿勢（コルク先行）は未実装（簡易表示）。

@@ -1,5 +1,5 @@
-import ReactionKnockGame from "@/components/ReactionKnockGame";
+import ReactionKnock3D from "@/components/ReactionKnock3D";
 
 export default function Home() {
-  return <ReactionKnockGame />;
+  return <ReactionKnock3D />;
 }

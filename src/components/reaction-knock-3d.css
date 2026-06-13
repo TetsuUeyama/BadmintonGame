@@ -1,0 +1,264 @@
+/* リアクションステップ・ノック 3D — UI スタイル */
+.rk3d {
+  --bg: #14181d;
+  --accent: #ffb454;
+  --hot: #ff6b5e;
+  --ink: #eef2ee;
+  --sub: #9aa8a0;
+  --panel: #1d242b;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP",
+    "Yu Gothic UI", system-ui, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rk3d .stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+  touch-action: none;
+  background: #0d1116;
+}
+
+/* HUD */
+.rk3d .hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px 18px;
+  pointer-events: none;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+.rk3d .hud .big {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+}
+.rk3d .hud .sub {
+  font-size: 13px;
+  color: var(--sub);
+}
+.rk3d .hud .right {
+  text-align: right;
+}
+.rk3d .combo {
+  color: var(--hot);
+  font-weight: 800;
+  font-size: 14px;
+  min-height: 16px;
+}
+
+/* ステップボタン + ヒント */
+.rk3d .controls {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(440px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.rk3d .stepBtn {
+  width: 100%;
+  height: 74px;
+  border: none;
+  border-radius: 16px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #14181d;
+  background: linear-gradient(180deg, #ffc878, var(--accent));
+  box-shadow: 0 6px 0 #b87c2c, 0 14px 28px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.05s, box-shadow 0.05s, filter 0.15s;
+  font-family: inherit;
+}
+.rk3d .stepBtn:active {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 #b87c2c, 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+.rk3d .hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--sub);
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* オーバーレイ */
+.rk3d .overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 13, 17, 0.78);
+  backdrop-filter: blur(4px);
+  z-index: 20;
+  padding: 16px;
+}
+.rk3d .panel {
+  width: 100%;
+  max-width: 400px;
+  background: var(--panel);
+  border-radius: 18px;
+  padding: 24px 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.rk3d .panel h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.rk3d .panel h1 small {
+  display: block;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  margin-bottom: 6px;
+}
+.rk3d .lead {
+  font-size: 13px;
+  color: var(--sub);
+  line-height: 1.7;
+  margin: 10px 0 16px;
+}
+.rk3d .lead b {
+  color: var(--accent);
+}
+.rk3d .optgroup {
+  margin-bottom: 14px;
+}
+.rk3d .optgroup .label {
+  font-size: 11px;
+  color: var(--sub);
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+.rk3d .opts {
+  display: flex;
+  gap: 8px;
+}
+.rk3d .opts button {
+  flex: 1;
+  padding: 10px 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rk3d .opts button.sel {
+  background: var(--accent);
+  color: #14181d;
+  border-color: var(--accent);
+}
+.rk3d .opts button .sub {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+.rk3d .primary {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  font-family: inherit;
+  background: linear-gradient(180deg, #ffc878, var(--accent));
+  color: #14181d;
+  box-shadow: 0 4px 0 #b87c2c;
+}
+.rk3d .ghost {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--sub);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.rk3d .best {
+  font-size: 12px;
+  color: var(--sub);
+  margin-top: 10px;
+  text-align: center;
+}
+.rk3d .rankBig {
+  font-size: 84px;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+  margin: 6px 0 2px;
+  background: linear-gradient(180deg, #fff, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.rk3d .resultScore {
+  text-align: center;
+  font-size: 15px;
+  color: var(--sub);
+  margin-bottom: 14px;
+}
+.rk3d .resultScore b {
+  color: var(--ink);
+  font-size: 24px;
+}
+.rk3d .stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.rk3d .stat {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+.rk3d .stat .v {
+  font-size: 20px;
+  font-weight: 800;
+}
+.rk3d .stat .k {
+  font-size: 10px;
+  color: var(--sub);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+.rk3d .newBest {
+  text-align: center;
+  color: var(--hot);
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 8px;
+  letter-spacing: 0.15em;
+}
