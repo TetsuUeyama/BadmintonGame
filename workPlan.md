@@ -8,7 +8,14 @@
 - [x] リポジトリ初期化（https://github.com/TetsuUeyama/BadmintonGame.git）
 - [x] Next.js 15.3.3 + TS + Tailwind v4 のスキャフォールド
 - [x] Babylon.js v8 + Havok の導入と wasm コピースクリプト
-- [x] 右手系・+Z forward のシーン土台（コート/ネット/シャトル仮）
+- [x] 右手系・+Z forward のシーン土台（コート/ネット/シャトル仮）→ `/babylon`
+
+## フェーズ 0.5: リアクションステップ・ノック移植（完了）
+
+- [x] `reaction-knock.html` を TS + React に移植（`/` をメインゲームに）
+- [x] ゲームロジックを `src/game/reaction-knock/engine.ts` に型付きで集約
+- [x] `window.storage` → `localStorage` へ置換
+- [ ] ブラウザ実機での挙動確認（描画・タイミング判定・音・自己ベスト保存）← 次にやる
 
 ## フェーズ 1: コート・描画の作り込み
 

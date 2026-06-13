@@ -1,0 +1,261 @@
+/* リアクションステップ・ノック専用スタイル（元 HTML の <style> を移植） */
+.rsk {
+  --bg: #14181d;
+  --court: #2e8b6a;
+  --court-dark: #27775b;
+  --line: #f2f5f0;
+  --accent: #ffb454;
+  --hot: #ff6b5e;
+  --ink: #eef2ee;
+  --sub: #9aa8a0;
+  --panel: #1d242b;
+}
+
+/* このゲームは body 全体のレイアウトを支配する（単独ページ前提の移植） */
+body:has(.rsk) {
+  background: radial-gradient(120% 90% at 50% 0%, #1b2128 0%, #14181d 60%);
+  color: #eef2ee;
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP",
+    "Yu Gothic UI", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rsk #wrap {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 10px 16px;
+}
+/* HUD */
+.rsk #hud {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 4px 6px 8px;
+  font-size: 13px;
+  color: var(--sub);
+}
+.rsk #hud .big {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.rsk #hud .right {
+  text-align: right;
+}
+/* canvas */
+.rsk #cv {
+  width: 100%;
+  border-radius: 14px;
+  display: block;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  background: #10141a;
+}
+/* step button */
+.rsk #stepBtn {
+  margin-top: 12px;
+  width: 100%;
+  height: 74px;
+  border: none;
+  border-radius: 16px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #14181d;
+  background: linear-gradient(180deg, #ffc878, var(--accent));
+  box-shadow: 0 6px 0 #b87c2c, 0 14px 28px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.05s, box-shadow 0.05s, filter 0.15s;
+  font-family: inherit;
+}
+.rsk #stepBtn:active {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 #b87c2c, 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+.rsk #stepBtn:disabled {
+  filter: grayscale(0.7) brightness(0.6);
+  box-shadow: 0 6px 0 #444, 0 10px 20px rgba(0, 0, 0, 0.3);
+  cursor: default;
+}
+.rsk #hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--sub);
+  text-align: center;
+  min-height: 16px;
+}
+/* overlays */
+.rsk .overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 13, 17, 0.82);
+  backdrop-filter: blur(4px);
+  z-index: 20;
+  padding: 16px;
+}
+.rsk .panel {
+  width: 100%;
+  max-width: 400px;
+  background: var(--panel);
+  border-radius: 18px;
+  padding: 24px 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.rsk .panel h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.rsk .panel h1 small {
+  display: block;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  margin-bottom: 6px;
+}
+.rsk .panel p.lead {
+  font-size: 13px;
+  color: var(--sub);
+  line-height: 1.7;
+  margin: 10px 0 16px;
+}
+.rsk .optgroup {
+  margin-bottom: 14px;
+}
+.rsk .optgroup .label {
+  font-size: 11px;
+  color: var(--sub);
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+.rsk .opts {
+  display: flex;
+  gap: 8px;
+}
+.rsk .opts button {
+  flex: 1;
+  padding: 10px 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rsk .opts button.sel {
+  background: var(--accent);
+  color: #14181d;
+  border-color: var(--accent);
+}
+.rsk .opts button .sub {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+.rsk #startBtn,
+.rsk #againBtn,
+.rsk #menuBtn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  font-family: inherit;
+  background: linear-gradient(180deg, #ffc878, var(--accent));
+  color: #14181d;
+  box-shadow: 0 4px 0 #b87c2c;
+}
+.rsk #menuBtn {
+  background: transparent;
+  color: var(--sub);
+  box-shadow: none;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px;
+}
+.rsk #best {
+  font-size: 12px;
+  color: var(--sub);
+  margin-top: 10px;
+  text-align: center;
+}
+/* result */
+.rsk #rankBig {
+  font-size: 84px;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+  margin: 6px 0 2px;
+  background: linear-gradient(180deg, #fff, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.rsk #resultScore {
+  text-align: center;
+  font-size: 15px;
+  color: var(--sub);
+  margin-bottom: 14px;
+}
+.rsk #resultScore b {
+  color: var(--ink);
+  font-size: 24px;
+}
+.rsk .stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.rsk .stat {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+.rsk .stat .v {
+  font-size: 20px;
+  font-weight: 800;
+}
+.rsk .stat .k {
+  font-size: 10px;
+  color: var(--sub);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+.rsk #newBest {
+  display: none;
+  text-align: center;
+  color: var(--hot);
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 8px;
+  letter-spacing: 0.15em;
+}
+.rsk .hidden {
+  display: none !important;
+}

@@ -33,24 +33,53 @@ npm run dev      # http://localhost:3000
 turbopack では `next.config.ts` の webpack 設定が無視されるため、
 `HavokPhysics({ locateFile: () => "/HavokPhysics.wasm" })` で読み込む。
 
+## ルート
+
+| パス | 内容 |
+|------|------|
+| `/` | **リアクションステップ・ノック**（2D Canvas のメインゲーム） |
+| `/babylon` | Babylon.js 3D デモ（将来の 3D 化に向けた土台） |
+
 ## ディレクトリ構成
 
 ```
 src/
   app/
-    layout.tsx        ルートレイアウト
-    page.tsx          トップ（GameCanvas をマウント）
-    globals.css       全画面キャンバス用スタイル
+    layout.tsx              ルートレイアウト
+    page.tsx                トップ（リアクションステップ・ノック）
+    globals.css             最小限のリセット
+    babylon/
+      page.tsx              Babylon デモ（/babylon）
+      babylon.css           全画面キャンバス用スタイル
   components/
-    GameCanvas.tsx    Babylon キャンバス + ライフサイクル管理（client）
+    ReactionKnockGame.tsx   ゲーム本体の DOM + エンジン起動（client）
+    reaction-knock.css      ゲーム専用スタイル
+    GameCanvas.tsx          Babylon キャンバス + ライフサイクル管理（client）
   game/
-    createScene.ts    Engine/Scene 構築・コート・ネット・シャトル・Havok 初期化
+    reaction-knock/
+      engine.ts             ゲームロジック（2D Canvas・型付き移植）
+    createScene.ts          Babylon Engine/Scene 構築（コート/ネット/シャトル/Havok）
 scripts/
-  copy-havok-wasm.mjs Havok wasm を public/ にコピー
+  copy-havok-wasm.mjs       Havok wasm を public/ にコピー
 ```
 
-## 現状
+## リアクションステップ・ノックとは
 
-- コート地面・ネット・シャトル（仮の球）を配置した土台シーンまで。
-- シャトルは Havok 剛体として +Z 方向へ放物線で発射する初期実装。
-  ※ 実シャトルの空力（高い抗力で急減速）は未実装。今後 `workPlan.md` に沿って実装する。
+ノッカーが打つ瞬間に「ステップ！」を押し（リアクションステップ）、球の落下点を
+タップして移動 → 届けば自動リターン、という反応速度トレーニング系ミニゲーム。
+ステップ精度が初動速度と体勢の安定（＝リターンの質）に影響する。20 球でスコアとランク判定。
+
+- メニュー: オールショート / オールロング / フリー
+- ノッカー Lv: 1（正直）/ 2（タメあり）/ 3（フェイント）
+- 自己ベストは `localStorage` に保存（元 HTML の `window.storage` から置換）
+
+## 移植元
+
+`reaction-knock.html`（単体 HTML）を TypeScript + React に移植したもの。
+ゲームロジックは挙動を変えずに `src/game/reaction-knock/engine.ts` へ集約。
+
+## 現状 / 未検証
+
+- `npm run build` / `tsc --noEmit` の成功は確認済み。
+- ブラウザでの実プレイ（描画・入力判定・音）は未検証。`npm run dev` で要確認。
+- Babylon デモ（`/babylon`）はコート/ネット/シャトル（仮）の土台シーンまで。
